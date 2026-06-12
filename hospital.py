@@ -80,3 +80,81 @@ class Hospital :
 
         print(f"Booked - Fee: {doctor.consultation_fee()} SAR")
         print("Appointment booked successfully")
+
+
+
+    # System Features 4 : Cancel an Appointment 
+    def cancel_appointment(self):
+        doctor_id = input("Enter doctor ID ? ")
+
+        if doctor_id not in self.doctors:
+            print("Doctor not found !")
+            return
+
+        doctor = self.doctors[doctor_id]
+
+        date = input("Enter Date ? ")
+        time = input("Enter Time ? ")
+
+        for appt in doctor.appointments:
+            if appt[0] == date and appt[1] == time:
+
+                doctor.cancel_appointment(appt)
+
+                patient_name = appt[3]
+
+                for patient in self.patients.values():
+                    if patient.name == patient_name:
+                        patient.add_note(f"Cancelled with Dr {doctor.name}")
+
+                print("Appointment cancelled")
+                return
+
+        print("Appointment not found !")
+
+    # System Features 5 : View Patient Record 
+    def view_patient_record(self):
+        patient_id = input(" Enter patient ID ? ")
+
+        if patient_id not in self.patients:
+            print("Patient not found !")
+            return
+
+        patient = self.patients[patient_id]
+
+        patient.display()
+
+        print("\nMedical History ?")
+        for note in patient.get_history():
+            print("-", note)
+
+    # System Features 6 : View Doctor Schedule  
+    def view_doctor_schedule(self) :
+        doctor_id = input("Enter doctor ID ?")
+
+        if doctor_id not in self.doctors :
+            print("Doctor not found !")
+            return
+
+        doctor = self.doctors[doctor_id]
+
+        doctor.display()
+
+        print("\nAppointments ? ")
+        for appt in doctor.appointments:
+            print(appt)  
+
+    # System Features 7 : Today's Appointments
+    def todays_appointments(self) :
+        date = input("Enter today's date (YYYY-MM-DD) ? ")
+
+        total = 0
+
+        for doctor in self.doctors.values() :
+            for appt in doctor.appointments :
+                if appt[0] == date :
+                    print(f"{doctor.name} - {appt}")
+
+                    total += doctor.consultation_fee()  
+
+        print(f"\nTotal Earnings: {total} SAR")
